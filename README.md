@@ -51,7 +51,7 @@ Open a web browser that supports playback of multiple sound elements (not Safari
 
 The following example uses a training dataset based on classical music by Beethoven, Clementi, Grieg, Haydn, Mendelssohn, Mozart, Schubert and Schumann. The resulting model is tested in the video below, using the interactive web application. The samples used were based on [fuhton/piano-mp3](https://github.com/fuhton/piano-mp3/).
 
-VID
+[](https://github.com/MaxBrynolf/lstm-harmonizer/assets/71834850/f9721428-0c87-45ab-ac0f-e822b7efbdfb)
 
 The distribution of the data is shown below, with each composer corresponding to a data family.
 
