@@ -3,5 +3,5 @@ MIDIs/*
 data/*
 harmonizer/__pycache__
 harmonizer/static/jquery.js
-harmonizer/sounds/*
+harmonizer/static/sounds/*
 **/.DS_Store
