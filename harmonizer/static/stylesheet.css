@@ -1,0 +1,518 @@
+:root, ::after, ::before {
+    --vignette-strength: 0.8;
+    --glow-thickness: 0.28em;
+    --glow-distortion: 1.9em;
+    --brightness: 90%;
+    --saturation: 0%;
+    --brightness-ratio: 3;
+    --c-glow: hsl(186, var(--saturation), var(--brightness));
+    --c-dim: hsl(186, 0%, calc(var(--brightness) / var(--brightness-ratio)));
+    
+    --staff-spacing: 15px;
+    --line-height: 2px;
+    --note-size: 23px;
+    --note-spacing: 24px;
+    --ledger-line-margin: 4px;
+    --accidental-height: 25px;
+    --octave-height: 15px;
+    --octave-y-offset: -20px;
+    --note-step: calc(0.5 * (var(--staff-spacing) + var(--line-height)));
+    
+    --white-key-width: 50px;
+    --white-key-length: 180px;
+    --white-key-height: 40px;
+    --white-key-poke: 5px;
+    --black-key-width: 25px;
+    --black-key-length: 100px;
+    --black-key-angle: 40deg;
+    --black-key-height: 20px;
+    --white-key-top-length: calc(var(--black-key-length) +
+                                 var(--black-key-height) / tan(var(--black-key-angle)) +
+                                 var(--key-margin));
+    --key-margin: 3px;
+}
+
+@keyframes pianoZoom {
+    0% {
+        transform: perspective(1000px) rotateX(48deg) scale(0.9);
+    }
+    100% {
+        transform: perspective(1000px) rotateX(50deg) scale(1);
+    }
+}
+
+@keyframes scaleZoom {
+    0% {
+        transform: scale(0.9);
+        opacity: 0%;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 100%;
+    }
+}
+
+@keyframes scaleZoomY {
+    0% {
+        transform: scaleY(0.9);
+        opacity: 0%;
+    }
+    100% {
+        transform: scaleY(1);
+        opacity: 100%;
+    }
+}
+
+@keyframes opac {
+    0% {
+        opacity: 0%;
+    }
+    100% {
+        opacity: 100%;
+    }
+}
+
+@keyframes addNote {
+    0% {
+        transform: scale(2.5);
+        filter: blur(0.3em);
+    }
+    100% {
+        transform: scale(1);
+        filter: blur(0.05em);
+    }
+}
+
+body {
+    margin: 0;
+    background: linear-gradient(to bottom, rgb(0, 0, 0) 0%, var(--c-dim) 70%, rgb(100, 100, 100) 75%, rgb(100, 100, 100) 100%);
+}
+
+.container {
+    height: 100%;
+    width: 100%;
+}
+
+.container:after {
+    content: "";
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(ellipse at center,
+                                rgba(0, 0, 0, 0) 0%,
+                                rgba(0, 0, 0, var(--vignette-strength)) 99%,
+                                rgba(0, 0, 0, var(--vignette-strength)) 100%);
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+}
+
+.staff {
+    position: fixed;
+    width: 100%;
+    height: calc(6 * var(--staff-spacing) + 5 * var(--line-height));
+    top: 25%;
+    animation: 1s ease scaleZoomY;
+}
+
+.staff .line {
+    width: 100%;
+    margin-top: var(--staff-spacing);
+    margin-bottom: var(--staff-spacing);
+    height: var(--line-height);
+    background-color: var(--c-dim);
+}
+
+.staff .clef {
+    position: absolute;
+    left: 50px;
+    top: calc(-1 * var(--staff-spacing));
+    width: 50px;
+    height: calc(100% + 2 * var(--staff-spacing));
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-image: url("images/clef.png");
+    filter: blur(0.08em);
+    animation: 1s ease scaleZoom;
+}
+
+.staff .notes {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    height: 100%;
+}
+
+.notes .note {
+    position: relative;
+    float: left;
+    margin-top: calc(-5 * var(--note-step));
+    padding-left: var(--ledger-line-margin);
+    padding-right: var(--ledger-line-margin);
+    margin-left: var(--note-spacing);
+    margin-right: var(--note-spacing);
+    height: calc(100% + 10 * var(--note-step));
+    width: calc(var(--note-size));
+    background-size: var(--note-size) var(--staff-spacing);
+    background-position-x: var(--ledger-line-margin);
+    background-image: url("images/note.png");
+    background-repeat: no-repeat;
+    filter: blur(0.05em);
+    background-position-y: var(--note-offset);
+    animation: 0.5s ease addNote;
+}
+
+.notes .note_D7 { --note-offset: calc(1 * var(--note-step)); }
+.notes .note_C7 { --note-offset: calc(2 * var(--note-step)); }
+.notes .note_B6 { --note-offset: calc(3 * var(--note-step)); }
+.notes .note_A6 { --note-offset: calc(4 * var(--note-step)); }
+.notes .note_G6 { --note-offset: calc(5 * var(--note-step)); }
+.notes .note_F6 { --note-offset: calc(6 * var(--note-step)); }
+.notes .note_E6 { --note-offset: calc(7 * var(--note-step)); }
+.notes .note_D6 { --note-offset: calc(8 * var(--note-step)); }
+.notes .note_C6 { --note-offset: calc(2 * var(--note-step)); }
+.notes .note_B5 { --note-offset: calc(3 * var(--note-step)); }
+.notes .note_A5 { --note-offset: calc(4 * var(--note-step)); }
+.notes .note_G5 { --note-offset: calc(5 * var(--note-step)); }
+.notes .note_F5 { --note-offset: calc(6 * var(--note-step)); }
+.notes .note_E5 { --note-offset: calc(7 * var(--note-step)); }
+.notes .note_D5 { --note-offset: calc(8 * var(--note-step)); }
+.notes .note_C5 { --note-offset: calc(9 * var(--note-step)); }
+.notes .note_B4 { --note-offset: calc(10 * var(--note-step)); }
+.notes .note_A4 { --note-offset: calc(11 * var(--note-step)); }
+.notes .note_G4 { --note-offset: calc(12 * var(--note-step)); }
+.notes .note_F4 { --note-offset: calc(13 * var(--note-step)); }
+.notes .note_E4 { --note-offset: calc(14 * var(--note-step)); }
+.notes .note_D4 { --note-offset: calc(15 * var(--note-step)); }
+.notes .note_C4 { --note-offset: calc(16 * var(--note-step)); }
+.notes .note_B3 { --note-offset: calc(17 * var(--note-step)); }
+.notes .note_A3 { --note-offset: calc(18 * var(--note-step)); }
+.notes .note_G3 { --note-offset: calc(19 * var(--note-step)); }
+.notes .note_F3 { --note-offset: calc(20 * var(--note-step)); }
+
+.notes .note.sharp, .notes .note.flat, .notes .note.reset {
+    margin-left: calc(var(--note-spacing) + var(--accidental-width));
+}
+
+.notes .note.sharp {
+    --accidental-width: 15px;
+    --relative-offset: calc(0.5 * (var(--staff-spacing) - var(--accidental-height)));
+}
+
+.notes .note.flat {
+    --accidental-width: 12px;
+    --relative-offset: calc(0.5 * var(--staff-spacing) - 0.78 * var(--accidental-height));
+}
+
+.notes .note.reset {
+    --accidental-width: 11px;
+    --relative-offset: calc(0.5 * (var(--staff-spacing) - var(--accidental-height)));
+}
+
+.notes .note.sharp:before, .notes .note.flat:before, .notes .note.reset:before {
+    content: "";
+    position: absolute;
+    left: calc(-1 * var(--ledger-line-margin) - var(--accidental-width));
+    background-repeat: no-repeat;
+    background-position-y: calc(var(--note-offset) + var(--relative-offset));
+    background-size: var(--accidental-width) var(--accidental-height);
+    width: var(--accidental-width);
+    height: 100%;
+}
+
+.notes .note.sharp:before {
+    background-image: url("images/sharp.png");
+}
+
+.notes .note.flat:before {
+    background-image: url("images/flat.png");
+}
+
+.notes .note.reset:before {
+    background-image: url("images/reset.png");
+}
+
+.notes .note.octave:after {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: var(--octave-y-offset);
+    width: 100%;
+    height: 100%;
+    background-image: url("images/8va.png");
+    background-size: 100% var(--octave-height);
+    background-repeat: no-repeat;
+}
+
+.note .ledger_bottom {
+    position: absolute;
+    width: calc(var(--note-size) + 2 * var(--ledger-line-margin));
+    height: var(--ledger-height);
+    top: calc(17 * var(--note-step) - var(--line-height));
+    left: 0;
+    background-image: repeating-linear-gradient(180deg, #fff 0, #fff var(--line-height),
+                                                transparent var(--line-height),
+                                                transparent calc(2 * var(--note-step)));
+}
+
+.note .ledger_top {
+    position: absolute;
+    width: calc(var(--note-size) + 2 * var(--ledger-line-margin));
+    height: var(--ledger-height);
+    top: calc(-1 * var(--line-height));
+    left: 0;
+    background-image: repeating-linear-gradient(180deg, #fff 0, #fff var(--line-height),
+                                                transparent var(--line-height),
+                                                transparent calc(2 * var(--note-step)));
+}
+
+.ledger_bottom[data-index="0"] {
+    --ledger-height: var(--note-step);
+}
+
+.ledger_bottom[data-index="1"] {
+    --ledger-height: calc(3 * var(--note-step));
+}
+
+.ledger_bottom[data-index="2"] {
+    --ledger-height: calc(5 * var(--note-step));
+}
+
+.ledger_top[data-index="0"] {
+    top: calc(5 * var(--note-step) - var(--line-height));
+    --ledger-height: var(--note-step);
+}
+
+.ledger_top[data-index="1"] {
+    top: calc(3 * var(--note-step) - var(--line-height));
+    --ledger-height: calc(3 * var(--note-step));
+}
+
+.ledger_top[data-index="2"] {
+    top: calc(1 * var(--note-step) - var(--line-height));
+    --ledger-height: calc(5 * var(--note-step));
+}
+
+.key_glow {
+    position: fixed;
+    top: calc(70%);
+    left: -5%;
+    width: 110%;
+    height: var(--glow-thickness);
+    filter: blur(var(--glow-distortion));
+    background-color: var(--c-glow);
+    box-shadow: inset 0px 0px 1em 0px var(--c-glow), 0px 0em 1em 0px var(--c-glow);
+    overflow: hidden;
+    z-index: 1;
+}
+
+.piano_container {
+    position: fixed;
+    top: 70%;
+    left: calc((100vw - 1400px) / 2);
+    height: 30%;
+    width: fit-content;
+    margin: 0px;
+    padding: 0px;
+    animation: 1s ease opac;
+}
+
+.piano {
+    width: fit-content;
+    min-width: 1400px;
+    transform-style: preserve-3d;
+    transform: perspective(1000px) rotateX(50deg);
+    animation: 1s ease pianoZoom;
+}
+
+.piano * {
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    -webkit-transform-style: preserve-3d;
+    transform-style: preserve-3d;
+}
+
+.key.white {
+    width: var(--white-key-width);
+    height: var(--white-key-length);
+    float: left;
+    position: relative;
+    transform: rotateX(-0deg);
+    transform-origin: 0% 0%;
+}
+
+.key.black {
+    margin-left: calc(-1 * var(--black-key-width) / 2);
+    width: var(--black-key-width);
+    height: var(--black-key-length);
+    position: relative;
+    float: left;
+}
+
+.key.white:active {
+    transform: translateZ(-3px) rotateX(-3deg);
+    transform-origin: 0% 0%;
+}
+
+.key.black:active {
+    transform: translateZ(-3px) rotateX(-3deg);
+    transform-origin: 0% 0%;
+}
+
+.D, .E, .G, .A, .B {
+    margin-left: calc(-1 * var(--black-key-width) / 2);
+}
+
+.key .face {
+    position: absolute;
+}
+
+.key.white .face.up_front {
+    width: var(--white-key-width);
+    height: calc(var(--white-key-length) - var(--white-key-top-length));
+    background-color: white;
+    border-radius: 0px 0px 5px 5px;
+    transform: translateY(var(--white-key-top-length));
+    box-shadow:
+        inset 5px 0px 1px -3px rgba(0, 0, 0, 0.4),
+        inset -5px -5px 5px -3px rgba(0, 0, 0, 0.4);
+}
+
+.key.white .face.up_back {
+    width: calc(var(--white-key-width) - var(--black-key-width) / 2 - var(--key-margin));
+    height: var(--white-key-top-length);
+    background-color: white;
+    box-shadow:
+    inset 5px 5px 1px -3px rgba(0, 0, 0, 0.4),
+    inset -5px 0px 5px -3px rgba(0, 0, 0, 0.4);
+}
+
+.key.white.B .face.up_back, .key.white.E .face.up_back {
+    transform: translateX(calc(var(--black-key-width) / 2 + var(--key-margin)));
+}
+
+.key.white.G .face.up_back, .key.white.A .face.up_back, .key.white.D .face.up_back {
+    width: calc(var(--white-key-width) - var(--black-key-width) - 2 * var(--key-margin));
+    transform: translateX(calc(var(--black-key-width) / 2 + var(--key-margin)));
+}
+
+.key.white .face.front {
+    width: var(--white-key-width);
+    height: var(--white-key-height);
+    transform:
+        translateZ(calc(-1 * var(--white-key-height) / 2))
+        translateY(calc(var(--white-key-length) - var(--white-key-height) / 2 - var(--white-key-poke)))
+        rotateX(-90deg);
+    background-color: #eee;
+    border-radius: 0px 0px 5px 5px;
+    box-shadow:
+        inset 5px 0px 1px -3px rgba(0, 0, 0, 0.4),
+        inset -5px -5px 5px -3px rgba(0, 0, 0, 0.4);
+}
+
+.key.white .face.right {
+    width: var(--white-key-height);
+    height: calc(var(--white-key-length) - var(--white-key-top-length) - var(--white-key-poke));
+    transform:
+        translateY(var(--white-key-top-length))
+        translateZ(calc(-1 * var(--white-key-height) / 2))
+        translateX(calc(var(--white-key-width) - var(--white-key-height) / 2))
+        rotateY(90deg);
+    position: absolute;
+    background-color: #ddd;
+    box-shadow:
+        inset -1px -1px 5px 0px rgba(0, 0, 0, 0.2),
+        inset 1px 1px 5px 0px rgba(0, 0, 0, 0.2);
+}
+
+.key.white .face.left {
+    width: var(--white-key-height);
+    height: calc(var(--white-key-length) - var(--white-key-top-length) - var(--white-key-poke));
+    transform:
+        translateY(var(--white-key-top-length))
+        translateZ(calc(-1 * var(--white-key-height) / 2))
+        translateX(calc(-1 * var(--white-key-height) / 2))
+        rotateY(-90deg);
+    position: absolute;
+    background-color: #ddd;
+    box-shadow:
+        inset -1px -1px 5px 0px rgba(0, 0, 0, 0.2),
+        inset 1px 1px 5px 0px rgba(0, 0, 0, 0.2);
+}
+
+.key.white.C .face.left, .key.white.F .face.left {
+    transform:
+        translateZ(calc(-1 * var(--white-key-height) / 2))
+        translateX(calc(-1 * var(--white-key-height) / 2))
+        rotateY(-90deg);
+    height: calc(var(--white-key-length) - var(--white-key-poke));
+}
+
+.key.white.B .face.right, .key.white.E .face.right {
+    transform:
+        translateZ(calc(-1 * var(--white-key-height) / 2))
+        translateX(calc(var(--white-key-width) - var(--white-key-height) / 2))
+        rotateY(90deg);
+    height: calc(var(--white-key-length) - var(--white-key-poke));
+}
+
+.key.black .face.up {
+    width: var(--black-key-width);
+    height: var(--black-key-length);
+    transform: translateZ(var(--black-key-height));
+    background-color: #252525;
+    box-shadow:
+        inset -1px -1px 5px 0px rgba(0, 0, 0, 0.3),
+        inset 1px 1px 5px 0px rgba(0, 0, 0, 0.3);
+}
+
+.key.black .face.front {
+    width: var(--black-key-width);
+    height: calc(var(--black-key-height) / sin(var(--black-key-angle)));
+    transform:
+        translateZ(calc(var(--black-key-height) / 2))
+        translateY(calc(var(--black-key-length) -
+                        var(--black-key-height) * (1/sin(var(--black-key-angle)) - 1/tan(var(--black-key-angle)))/ 2))
+        rotateX(calc(-1 * var(--black-key-angle)));
+    background-color: #444;
+    box-shadow:
+        inset -1px 0px 5px 0px rgba(0, 0, 0, 0.5),
+        inset 1px 1px 5px 0px rgba(0, 0, 0, 0.5);
+}
+
+.key.black .face.front_bottom {
+    width: var(--black-key-width);
+    height: var(--black-key-height);
+    transform:
+        translateZ(calc(-3 * var(--black-key-height) / 2))
+        translateY(calc(var(--black-key-length) - var(--black-key-height) * (1 - 2/tan(var(--black-key-angle))) / 2))
+        rotateX(-90deg);
+    background-color: #252525;
+}
+
+.key.black .face.right {
+    width: calc(2 * var(--black-key-height));
+    height: calc(var(--white-key-top-length) - var(--key-margin));
+    transform:
+        translateX(calc(var(--black-key-width) - var(--black-key-height)))
+        rotateY(90deg);
+    position: absolute;
+    background-image:
+        linear-gradient(-140deg, #555 90%, transparent 0);
+    background-repeat: no-repeat;
+}
+
+.key.black .face.left {
+    width: calc(2 * var(--black-key-height));
+    height: calc(var(--white-key-top-length) - var(--key-margin));
+    transform:
+        translateX(calc(-1 * var(--black-key-height)))
+        rotateY(-90deg);
+    position: absolute;
+    background-image:
+        linear-gradient(-230deg, #555 90%, transparent 0);
+    background-repeat: no-repeat;
+}

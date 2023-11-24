@@ -1,0 +1,7 @@
+.ipynb_checkpoints/
+MIDIs/*
+data/*
+harmonizer/__pycache__
+harmonizer/static/jquery.js
+harmonizer/sounds/*
+**/.DS_Store
