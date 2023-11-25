@@ -19,6 +19,7 @@ Installation:
 2. Install PyTorch with `pip install torch`
 3. Find a resource with piano sound samples and put the files in "harmonizer/static/sounds", renamed to note names (for instance "A4.mp3")
 4. Go to "harmonizer/static/piano.js" and change `file_format` to whichever file format is used for the sound samples
+5. Add "jquery.js" to "harmonizer/static"
 
 ## Usage
 #### Training
